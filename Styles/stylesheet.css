@@ -1,0 +1,21 @@
+#boards_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-left: -150px;
+}
+
+.board{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-width: 220px;
+    max-height: 220px;
+}
+
+.cell{
+    min-width: 20px;
+    min-height: 20px;
+    background-color: white;
+    border: 1px solid black;
+}

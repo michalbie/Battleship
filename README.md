@@ -1,2 +1,2 @@
 # Battleship
-Battleship web game wrote in HTML, CSS and JS.
+Battleship web game written in HTML, CSS and JS.
