@@ -7,6 +7,29 @@ var enemy_cells_divs
 
 var ships_amount = {4:1, 3:2, 2:3, 1:4} //for example: one 4-fieleds wide ship, two 3-fields wide ships...
 
+function setupGame(){
+    createBoards()
+    createChoosingMenu()
+}
+
+function createChoosingMenu(){
+    let choose_container = document.getElementById("choose_container")
+    
+    for(let i=4; i>=1; i--){
+        for(let j=0; j<ships_amount[i]; j++){
+            let menu_ship = document.createElement("div")
+            menu_ship.setAttribute("class", "menu_ship")
+            choose_container.appendChild(menu_ship)
+
+            for(let cell=i; cell>0; cell--){
+                let ship_cell = document.createElement("div")
+                ship_cell.setAttribute("class", "cell")
+                menu_ship.appendChild(ship_cell)
+            }
+        }
+    }
+}
+
 //Define all variables and fill arrays 
 function createBoards(){
     player_board = document.getElementById("player_board")
