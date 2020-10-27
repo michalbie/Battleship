@@ -5,29 +5,32 @@ var enemy_cells
 var player_cells_divs
 var enemy_cells_divs
 
-//define all variables and fill arrays 
+var ships_amount = {4:1, 3:2, 2:3, 1:4} //for example: one 4-fieleds wide ship, two 3-fields wide ships...
+
+//Define all variables and fill arrays 
 function createBoards(){
     player_board = document.getElementById("player_board")
     enemy_board = document.getElementById("enemy_board")
 
     player_cells = new Array(12).fill(0)
     enemy_cells = new Array(12).fill(0)
-    player_cells_divs = new Array(10)
+    player_cells_divs = new Array(10) //cells have additional 1 square in every direction to avoid errors while scanning area around ship
     enemy_cells_divs = new Array(10)
 
     for(let i=0; i<12; i++){
         player_cells[i] = new Array(12).fill(0)
         enemy_cells[i] = new Array(12).fill(0)
-    }
-    for(let i=0; i<10; i++){
-        player_cells_divs[i] = new Array(10)
-        enemy_cells_divs[i] = new Array(10)
+
+        if(i<10){
+            player_cells_divs[i] = new Array(10)
+            enemy_cells_divs[i] = new Array(10)
+        }
     }
 
     initBoards()
 }
 
-//create boards' fields (divs)
+//Create boards' fields (divs)
 function initBoards(){
     for(let i=0; i<10; i++){
         for(let j=0; j<10; j++){
@@ -44,9 +47,8 @@ function initBoards(){
     generateEnemyShips()
 }
 
-//generate random ships' positions for enemy (COMPUTER)
+//Generate random ships' positions for enemy (COMPUTER)
 function generateEnemyShips(){
-    let ships_amount = {4:1, 3:2, 2:3, 1:4}
     
     function getRandomPosition(){
         let cords = [Math.floor(Math.random() * 9) + 1, Math.round(Math.random() * 9) + 1] //1 - 10
@@ -59,56 +61,61 @@ function generateEnemyShips(){
     }
 
     function checkAvailability(cords, size, orientation){
+
+        function scanHorziontally(){
+            for(let r=0; r<parseInt(size)+parseInt(2); r++){
+                for(let c=0; c<3; c++){
+                    if((parseInt(cords[0]) + r-1) <= 11 && (parseInt(cords[1]) + c-1) <= 11){
+                        if(enemy_cells[parseInt(cords[0]) + r-1][parseInt(cords[1]) + c-1] != 0) return false   
+                    }
+                    else return false
+                }
+            }
+            return true
+        }
+
+        function scanVertically(){
+            for(let r=0; r<3; r++){
+                for(let c=0; c<parseInt(size)+parseInt(2); c++){
+                    if((parseInt(cords[0]) + r-1) <= 11 && (parseInt(cords[1]) + c-1) <= 11){
+                        if(enemy_cells[parseInt(cords[0]) + r-1][parseInt(cords[1]) + c-1] != 0) return false
+                    }
+                    else return false
+                }
+            }
+            return true
+        }
+
+        //begin scanning (scanning area depends on orientation)
         if(enemy_cells[cords[0]][cords[1]] == 0){
+            var can_place
             switch(orientation){
                 case 0:
-                    for(let r=0; r<parseInt(size)+parseInt(2); r++){
-                        for(let c=0; c<3; c++){
-                            if((parseInt(cords[0]) + r-1) <= 11 && (parseInt(cords[1]) + c-1) <= 11){
-                                if(enemy_cells[parseInt(cords[0]) + r-1][parseInt(cords[1]) + c-1] != 0){
-                                    return false
-                                }
-                            }
-                            else{
-                                return false
-                            }
-                        }
-                    }
+                    can_place = scanHorziontally()
                     break;
 
                 case 1:
-                    for(let r=0; r<3; r++){
-                        for(let c=0; c<parseInt(size)+parseInt(2); c++){
-                            if((parseInt(cords[0]) + r-1) <= 11 && (parseInt(cords[1]) + c-1) <= 11){
-                                if(enemy_cells[parseInt(cords[0]) + r-1][parseInt(cords[1]) + c-1] != 0){
-                                    return false
-                                }
-                            }
-                            else{
-                                return false
-                            } 
-                        }
-                    }
+                    can_place = scanVertically()
                     break;
             }
-
-            return true
+            if(can_place) return true
+            else return false
         }
     }
     
-    //iterate over every possible ship and generate random position which will satisfy the rules (min. 1 field between ships and they cant overlap)
+    //Iterate over every possible ship and generate random position which will satisfy the rules (min. 1 field between ships and they cant overlap)
     for(let i=4; i>=1; i--){
         for(let j=0; j<ships_amount[i]; j++){
-            let found = false
+            let is_found = false
             let found_coordinates
             let found_orientation
 
-            while(found != true){
+            while(is_found != true){
                 let start_cords = getRandomPosition()
                 let orientation = getRandomOrientation()
-                found = checkAvailability(start_cords, Object.keys(ships_amount)[i-1], orientation)
+                is_found = checkAvailability(start_cords, Object.keys(ships_amount)[i-1], orientation)
 
-                if(found){
+                if(is_found){
                     found_coordinates = start_cords
                     found_orientation = orientation
                 }
