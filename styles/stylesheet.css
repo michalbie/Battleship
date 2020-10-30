@@ -3,10 +3,16 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    flex-wrap: nowrap;
 }
 
-#choose_container{
-    min-width: 100px;
+#game_section{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+    flex-wrap: nowrap;
+    min-width: 90%;
 }
 
 #boards_container{
@@ -15,6 +21,7 @@
     justify-content: space-around;
     flex: 1;
     flex-wrap: nowrap;
+    /*min-width: 80%;*/
 }
 
 .board_section{
@@ -37,8 +44,13 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    max-width: 220px;
-    max-height: 220px;
+    
+    max-width: 230px;
+    max-height: 230px;
+}
+
+#choose_container{
+    min-width: 100px;
 }
 
 .cell{
@@ -54,6 +66,26 @@
     display:flex;
     flex-direction: row;
     margin-top: 10px;
+}
+
+#button_section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    min-width: 100%;
+}
+
+#play_button{
+    background-color: white;
+    border: solid 1px green;
+    min-height: 25px;
+    border-radius: 5px;
+    visibility: hidden;
+}
+
+#play_button:hover{
+    cursor: pointer;
 }
 
 
