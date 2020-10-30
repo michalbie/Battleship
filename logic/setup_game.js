@@ -7,6 +7,13 @@ var enemy_cells_divs
 
 var ships_amount = {4:1, 3:2, 2:3, 1:4} //for example: one 4-fieleds wide ship, two 3-fields wide ships...
 
+function setupGame(){
+    console.log("Initializing")
+    createBoards()
+    createChoosingMenu()
+}
+
+
 //Define all variables and fill arrays 
 function createBoards(){
     player_board = document.getElementById("player_board")
@@ -30,6 +37,7 @@ function createBoards(){
     initBoards()
 }
 
+
 //Create boards' fields (divs)
 function initBoards(){
     for(let i=0; i<10; i++){
@@ -47,99 +55,104 @@ function initBoards(){
     generateEnemyShips()
 }
 
-//Generate random ships' positions for enemy (COMPUTER)
-function generateEnemyShips(){
+
+function createChoosingMenu(){
+    let choose_container = document.getElementById("choose_container")
     
-    function getRandomPosition(){
-        let cords = [Math.floor(Math.random() * 9) + 1, Math.round(Math.random() * 9) + 1] //1 - 10
-        return cords
-    }
-
-    function getRandomOrientation(){
-        let orientation = Math.round(Math.random()) //0 - horizontal, 1 - vertical
-        return orientation
-    }
-
-    function checkAvailability(cords, size, orientation){
-
-        function scanHorziontally(){
-            for(let r=0; r<parseInt(size)+parseInt(2); r++){
-                for(let c=0; c<3; c++){
-                    if((parseInt(cords[0]) + r-1) <= 11 && (parseInt(cords[1]) + c-1) <= 11){
-                        if(enemy_cells[parseInt(cords[0]) + r-1][parseInt(cords[1]) + c-1] != 0) return false   
-                    }
-                    else return false
-                }
-            }
-            return true
-        }
-
-        function scanVertically(){
-            for(let r=0; r<3; r++){
-                for(let c=0; c<parseInt(size)+parseInt(2); c++){
-                    if((parseInt(cords[0]) + r-1) <= 11 && (parseInt(cords[1]) + c-1) <= 11){
-                        if(enemy_cells[parseInt(cords[0]) + r-1][parseInt(cords[1]) + c-1] != 0) return false
-                    }
-                    else return false
-                }
-            }
-            return true
-        }
-
-        //begin scanning (scanning area depends on orientation)
-        if(enemy_cells[cords[0]][cords[1]] == 0){
-            var can_place
-            switch(orientation){
-                case 0:
-                    can_place = scanHorziontally()
-                    break;
-
-                case 1:
-                    can_place = scanVertically()
-                    break;
-            }
-            if(can_place) return true
-            else return false
-        }
-    }
-    
-    //Iterate over every possible ship and generate random position which will satisfy the rules (min. 1 field between ships and they cant overlap)
     for(let i=4; i>=1; i--){
         for(let j=0; j<ships_amount[i]; j++){
-            let is_found = false
-            let found_coordinates
-            let found_orientation
+            let menu_ship = document.createElement("div")
+            menu_ship.setAttribute("class", "menu_ship")
+            choose_container.appendChild(menu_ship)
 
-            while(is_found != true){
-                let start_cords = getRandomPosition()
-                let orientation = getRandomOrientation()
-                is_found = checkAvailability(start_cords, Object.keys(ships_amount)[i-1], orientation)
-
-                if(is_found){
-                    found_coordinates = start_cords
-                    found_orientation = orientation
-                }
+            for(let cell=i; cell>0; cell--){
+                let ship_cell = document.createElement("div")
+                ship_cell.setAttribute("class", "cell")
+                menu_ship.appendChild(ship_cell)
             }
-
-            //Fill enemy_cells with 1 and set color for fields with ship after finding position
-            switch(found_orientation){
-                case 0:
-                    for(let r=found_coordinates[0]; r < parseInt(found_coordinates[0]) + parseInt(Object.keys(ships_amount)[i-1]); r++){
-                        enemy_cells[r][found_coordinates[1]] = 1
-                        enemy_cells_divs[r-1][found_coordinates[1]-1].style.backgroundColor = "black"
-                    }
-                    break;
-
-                case 1:
-                    for(let c=found_coordinates[1]; c < parseInt(found_coordinates[1]) + parseInt(Object.keys(ships_amount)[i-1]); c++){
-                        enemy_cells[found_coordinates[0]][c] = 1
-                        enemy_cells_divs[found_coordinates[0]-1][c-1].style.backgroundColor = "black"
-                    }
-                    break;
-            }
-
         }
     }
 }
 
 
+
+function prepareChooseMenu(){
+    let first_menu_element = document.querySelector(".menu_ship")
+    let choose_container = document.getElementById("choose_container")
+    all_ships = choose_container.querySelectorAll(".menu_ship")
+    chooseShip(0)
+
+    function addListeners(){
+        for(let i=0; i<all_ships.length; i++){
+            all_ships[i].addEventListener("click", function(){
+                chooseShip(i)
+            })
+            all_ships[i].addEventListener("mouseover", function(){
+                let cells = all_ships[i].querySelectorAll(".cell")
+                if(chosen != this){
+                    for(cell of cells){
+                        cell.style.backgroundColor = "red"
+                    }
+                }
+            })
+            all_ships[i].addEventListener("mouseout", function(){
+                let cells = all_ships[i].querySelectorAll(".cell")
+                if(chosen != this){
+                    for(cell of cells){
+                        cell.style.backgroundColor = "white"
+                    }
+                }
+            })
+          
+        }
+    }
+
+    addListeners()
+    preparePlayerBoard()
+}
+
+
+function preparePlayerBoard(){
+    var can_place
+
+    for(let i=0; i<10; i++){
+        for(let j=0; j<10; j++){
+            player_cells_divs[i][j].addEventListener("mouseenter", function(){
+                if(chosen != null){
+                    can_place = checkShipAvailability(i+1, j+1, chosen.childElementCount, ship_orientation, player_cells)
+                    showPlacingAvailability(i, j,  chosen.childElementCount, ship_orientation, can_place)
+                } 
+            })
+
+            player_cells_divs[i][j].addEventListener("mouseout", function(){
+                if(chosen != null){
+                    hidePlacingAvailability(i, j,  chosen.childElementCount, ship_orientation)
+                }
+            })
+
+            player_cells_divs[i][j].addEventListener("contextmenu", function(){
+                event.preventDefault()
+                if(chosen != null){
+                    if(ship_orientation){
+                        hidePlacingAvailability(i, j,  chosen.childElementCount, ship_orientation)
+                        ship_orientation = 0
+                        can_place = checkShipAvailability(i+1, j+1, chosen.childElementCount, ship_orientation, player_cells)
+                        showPlacingAvailability(i, j,  chosen.childElementCount, ship_orientation, can_place)
+                    } 
+                    else {
+                        hidePlacingAvailability(i, j,  chosen.childElementCount, ship_orientation)
+                        ship_orientation = 1
+                        can_place = checkShipAvailability(i+1, j+1, chosen.childElementCount, ship_orientation, player_cells)
+                        showPlacingAvailability(i, j,  chosen.childElementCount, ship_orientation, can_place)
+                    }
+                }
+            })
+
+            player_cells_divs[i][j].addEventListener("click", function(){
+                if(chosen != null){
+                    if(can_place) placeShip(i, j)
+                }
+            })
+        }
+    }
+}
