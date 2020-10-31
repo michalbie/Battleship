@@ -116,7 +116,6 @@ function prepareChooseMenu(){
 
 function preparePlayerBoard(){
     var can_place
-
     for(let i=0; i<10; i++){
         for(let j=0; j<10; j++){
             player_cells_divs[i][j].addEventListener("mouseenter", function(){
@@ -167,5 +166,4 @@ function preparePlayButton(){
         start_game()
         this.style.visibility = "hidden"
     })
-
 }

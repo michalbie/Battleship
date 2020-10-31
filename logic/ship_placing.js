@@ -177,7 +177,6 @@ function placeShip(x, y){
     chosen.remove()
 
     if(document.getElementById("choose_container").childElementCount > 0) chooseShip(0)
-
     else {
         chosen = null
         document.getElementById("play_button").style.visibility = "visible"
