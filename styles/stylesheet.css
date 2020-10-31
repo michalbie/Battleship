@@ -1,0 +1,95 @@
+#game_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+#game_section{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1;
+    flex-wrap: nowrap;
+    min-width: 90%;
+}
+
+#boards_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex: 1;
+    flex-wrap: nowrap;
+}
+
+.board_section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+}
+
+#player_board{
+    min-width: 220px;
+}
+
+#enemy_board{
+    min-width: 220px;
+}
+
+#enemy_board .cell:hover{
+    cursor: pointer;
+}
+
+.board{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    
+    max-width: 230px;
+    max-height: 230px;
+}
+
+#choose_container{
+    min-width: 100px;
+}
+
+.cell{
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.menu_ship{
+    display:flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+
+#button_section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    min-width: 100%;
+}
+
+#play_button{
+    background-color: white;
+    border: solid 1px green;
+    min-height: 25px;
+    border-radius: 5px;
+    visibility: hidden;
+}
+
+#play_button:hover{
+    cursor: pointer;
+}
+
+
