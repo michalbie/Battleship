@@ -32,7 +32,7 @@ function prepareEnemyBoard(){
                             shot(i, j, enemy_cells_divs)
                             enemy_cells_divs[i][j].removeEventListener("click", arguments.callee)
                             removeEnemyBoardListeners()
-                            enemyShot()
+                            setTimeout(enemyShot, 1000)
                         } 
                     })
                 }
@@ -105,7 +105,6 @@ function enemyShot(){
     first_moves = false
 
     if(game_active){
-
         let found_free = false
         while(!found_free){
             var random_cords = [(Math.round(Math.random() * 9) + 1), (Math.round(Math.random() * 9) + 1)] //1-10
