@@ -11,6 +11,8 @@ function setupGame(){
     console.log("Initializing")
     createBoards()
     createChoosingMenu()
+    prepareChooseMenu()
+    preparePlayButton()
 }
 
 
@@ -155,4 +157,15 @@ function preparePlayerBoard(){
             })
         }
     }
+}
+
+
+function preparePlayButton(){
+    let button = document.getElementById("play_button")
+    
+    button.addEventListener("click", function(){
+        start_game()
+        this.style.visibility = "hidden"
+    })
+
 }
