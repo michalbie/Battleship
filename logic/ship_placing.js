@@ -177,8 +177,10 @@ function placeShip(x, y){
     chosen.remove()
 
     if(document.getElementById("choose_container").childElementCount > 0) chooseShip(0)
-    else chosen = null
-
+    else {
+        chosen = null
+        document.getElementById("play_button").style.visibility = "visible"
+    }
 }
 
 
@@ -187,7 +189,7 @@ function placeShip(x, y){
 function generateEnemyShips(){
     
     function getRandomPosition(){
-        let cords = [Math.floor(Math.random() * 9) + 1, Math.round(Math.random() * 9) + 1] //1 - 10
+        let cords = [Math.round(Math.random() * 9) + 1, Math.round(Math.random() * 9) + 1] //1 - 10
         return cords
     }
 
@@ -220,14 +222,14 @@ function generateEnemyShips(){
                 case 0:
                     for(let r=found_coordinates[0]; r < parseInt(found_coordinates[0]) + parseInt(Object.keys(ships_amount)[i-1]); r++){
                         enemy_cells[r][found_coordinates[1]] = 1
-                        enemy_cells_divs[r-1][found_coordinates[1]-1].style.backgroundColor = "black"
+                        //enemy_cells_divs[r-1][found_coordinates[1]-1].style.backgroundColor = "black"
                     }
                     break;
 
                 case 1:
                     for(let c=found_coordinates[1]; c < parseInt(found_coordinates[1]) + parseInt(Object.keys(ships_amount)[i-1]); c++){
                         enemy_cells[found_coordinates[0]][c] = 1
-                        enemy_cells_divs[found_coordinates[0]-1][c-1].style.backgroundColor = "black"
+                        //enemy_cells_divs[found_coordinates[0]-1][c-1].style.backgroundColor = "black"
                     }
                     break;
             }
